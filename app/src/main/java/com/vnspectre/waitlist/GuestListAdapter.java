@@ -15,9 +15,12 @@ import android.widget.TextView;
 public class GuestListAdapter extends Adapter<GuestListAdapter.GuestViewHolder> {
 
     private Context mContext;
+    private int mCount;
 
-    public GuestListAdapter(Context mContext) {
+    public GuestListAdapter(Context mContext, int count) {
+
         this.mContext = mContext;
+        this.mCount = count;
     }
 
     @Override
@@ -35,7 +38,8 @@ public class GuestListAdapter extends Adapter<GuestListAdapter.GuestViewHolder> 
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        return mCount;
     }
 
     class GuestViewHolder extends RecyclerView.ViewHolder {
