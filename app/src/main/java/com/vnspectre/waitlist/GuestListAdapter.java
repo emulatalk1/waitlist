@@ -1,12 +1,15 @@
 package com.vnspectre.waitlist;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.vnspectre.waitlist.data.WaitlistContract;
 
 /**
  * Created by Spectre on 10/26/17.
@@ -15,12 +18,13 @@ import android.widget.TextView;
 public class GuestListAdapter extends Adapter<GuestListAdapter.GuestViewHolder> {
 
     private Context mContext;
-    private int mCount;
+    //private int mCount;
+    private Cursor mCursor;
 
-    public GuestListAdapter(Context mContext, int count) {
+    public GuestListAdapter(Context mContext, Cursor cursor) {
 
         this.mContext = mContext;
-        this.mCount = count;
+        this.mCursor = cursor;
     }
 
     @Override
@@ -33,13 +37,21 @@ public class GuestListAdapter extends Adapter<GuestListAdapter.GuestViewHolder> 
 
     @Override
     public void onBindViewHolder(GuestViewHolder holder, int position) {
+        if (!mCursor.moveToPosition(position)) {
+            return;
+        }
 
+        String name = mCursor.getString(mCursor.getColumnIndex(WaitlistContract.WaitlistEntry.COLUMN_GUEST_NAME));
+        int partySize = mCursor.getInt(mCursor.getColumnIndex(WaitlistContract.WaitlistEntry.COLUMN_PARTY_SIZE));
+
+        holder.nameTextView.setText(name);
+        holder.partySizeTextView.setText(String.valueOf(partySize));
     }
 
     @Override
     public int getItemCount() {
 
-        return mCount;
+        return mCursor.getCount();
     }
 
     class GuestViewHolder extends RecyclerView.ViewHolder {
