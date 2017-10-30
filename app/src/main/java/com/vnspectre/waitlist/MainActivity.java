@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -24,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase mDb;
 
     private EditText mNewGuestNameEditText;
-    private EditText mNewPartySizeEdittext;
+    private EditText mNewPartySizeEditText;
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         WaitlistDbHelper dbHelper = new WaitlistDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
-        TestUtil.insertFakeData(mDb);
+        //TestUtil.insertFakeData(mDb);
 
         RecyclerView waitlistRecyclerView;
 
         mNewGuestNameEditText = findViewById(R.id.person_name_edit_text);
-        mNewPartySizeEdittext = findViewById(R.id.party_count_edit_text);
+        mNewPartySizeEditText = findViewById(R.id.party_count_edit_text);
 
         // Set local attributes to corresponding views.
         waitlistRecyclerView = this.findViewById(R.id.all_guests_list_view);
@@ -56,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void addToWaitlist(View view) {
 
-        if (mNewPartySizeEdittext.getText().length() == 0 || mNewGuestNameEditText.getText().length() == 0) {
+        if (mNewPartySizeEditText.getText().length() == 0 || mNewGuestNameEditText.getText().length() == 0) {
             return;
         }
 
         int partySize = 1;
         try {
-            partySize = Integer.parseInt(mNewPartySizeEdittext.getText().toString());
+            partySize = Integer.parseInt(mNewPartySizeEditText.getText().toString());
         } catch (Exception e) {
-
+            Log.e(LOG_TAG, "Failed to parse party size text to number: " + e.getMessage());
         }
 
         addGuest(mNewGuestNameEditText.getText().toString(), partySize);
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.swapCursor(getAllGuests());
 
         mNewGuestNameEditText.getText().clear();
-        mNewPartySizeEdittext.getText().clear();
+        mNewPartySizeEditText.getText().clear();
 
     }
 
