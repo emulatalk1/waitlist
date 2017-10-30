@@ -2,4 +2,6 @@
 Work with SQLite Database
 - [x] Creating The Contract: Constract is a clause that defines the tables.
 - [x] Creating The Database.
-- [x] Query All Guests and show in MainUI
+- [x] Query All Guests and show in MainUI.
+- [x] Add Guest function.
+- [x] Remove Guest function.
