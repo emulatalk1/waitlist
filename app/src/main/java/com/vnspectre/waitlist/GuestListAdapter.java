@@ -46,6 +46,9 @@ public class GuestListAdapter extends Adapter<GuestListAdapter.GuestViewHolder> 
 
         holder.nameTextView.setText(name);
         holder.partySizeTextView.setText(String.valueOf(partySize));
+
+        long id = mCursor.getLong(mCursor.getColumnIndex(WaitlistContract.WaitlistEntry._ID));
+        holder.itemView.setTag(id);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -55,6 +56,20 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new GuestListAdapter(this, cursor);
 
         waitlistRecyclerView.setAdapter(mAdapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                long id = (long) viewHolder.itemView.getTag();
+                removeGuest(id);
+                mAdapter.swapCursor(getAllGuests());
+            }
+        }).attachToRecyclerView(waitlistRecyclerView);
     }
 
     public void addToWaitlist(View view) {
@@ -89,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         cv.put(WaitlistEntry.COLUMN_PARTY_SIZE, partySize);
 
         return mDb.insert(WaitlistEntry.TABLE_NAME, null, cv);
+    }
+
+    public boolean removeGuest(long id) {
+        return mDb.delete(WaitlistEntry.TABLE_NAME, WaitlistEntry._ID + " = " + id, null) > 0;
     }
 
 }
